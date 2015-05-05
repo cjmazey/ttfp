@@ -98,10 +98,10 @@ Definition DN (A : Prop) : Prop := ~ ~ A -> A.
 Definition CC (A B : Prop) : Prop := (~ A -> B) -> (~ A -> ~ B) -> A.
 
 Theorem I7a : forall A : Prop,
-    (A \/ ~ A) -> (~ ~ A -> A).
+    EM A -> DN A.
 Proof.
+  unfold EM, DN.
   intros A.
-  unfold not.
   intros a_or_not_a.
   intros not_not_a.
   destruct a_or_not_a as [a | not_a].
@@ -112,12 +112,11 @@ Proof.
 Qed.
 
 Theorem I7b : forall A B : Prop,
-    (~ ~ A -> A) -> ((~ A -> B) /\ (~ A -> ~ B) -> A).
+    DN A -> CC A B.
 Proof.
+  unfold DN, CC.
   intros A B.
-  intros not_not_a_imp_a.
-  intros not_a_imp_b_and_not_a_imp_not_b.
-  destruct not_a_imp_b_and_not_a_imp_not_b as [not_a_imp_b not_a_imp_not_b].
+  intros not_not_a_imp_a not_a_imp_b not_a_imp_not_b.
   refine (not_not_a_imp_a _).
     intros not_a.
     pose (b := not_a_imp_b not_a).
@@ -127,16 +126,15 @@ Proof.
 Qed.
 
 Theorem I7c : forall (A : Prop),
-    (forall (P Q : Prop), (~ P -> Q) /\ (~ P -> ~ Q) -> P) -> (A \/ ~ A).
+    CC (A \/ ~ A) (~ A) -> EM A.
 Proof.
+  unfold CC, EM.
   intros A.
-  intros CC.
-  pose (H := CC (A \/ ~ A) (~ A)).
-  refine (H _).
-    refine (conj _ _).
-      refine (I4a A (A \/ ~ A) _).
-        intros a. exact (or_introl a).
+  intros cc.
+  refine (cc _ _).
+    refine (I4a A (A \/ ~ A) _).
+      intros a. exact (or_introl a).
 
-      refine (I4a (~ A) (A \/ ~ A) _).
-        intros not_a. exact (or_intror not_a).
+    refine (I4a (~ A) (A \/ ~ A) _).
+      intros not_a. exact (or_intror not_a).
 Qed.
