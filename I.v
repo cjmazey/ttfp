@@ -56,3 +56,16 @@ Proof.
   intros not_a.
   exact (not_a a).
 Qed.
+
+Theorem I5 : forall A B : Prop,
+    (A \/ B) -> ((A -> False) /\ (B -> False) -> False).
+Proof.
+  intros A B.
+  intros a_or_b.
+  intros not_a_and_not_b.
+  destruct not_a_and_not_b as [not_a not_b].
+  destruct a_or_b as [a | b].
+    exact (not_a a).
+
+    exact (not_b b).
+Qed.
