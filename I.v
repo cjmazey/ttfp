@@ -156,3 +156,7 @@ Proof.
       pose (proof_of_False := not_a a).
       case proof_of_False.
 Qed.
+
+Definition I9 : forall (x y : nat), exists (z : nat),
+      x <> y -> x < z /\ z < y.
+Abort.
