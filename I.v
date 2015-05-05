@@ -138,3 +138,21 @@ Proof.
     refine (I4a (~ A) (A \/ ~ A) _).
       intros not_a. exact (or_intror not_a).
 Qed.
+
+Definition Pierce (A B : Prop) : Prop := ((A -> B) -> A) -> A.
+
+Theorem I8 : forall (A B : Prop),
+    EM A -> Pierce A B.
+Proof.
+  unfold EM, Pierce.
+  intros A B.
+  intros em.
+  intros a_imp_b_imp_a.
+  destruct em as [a | not_a].
+    exact a.
+
+    refine (a_imp_b_imp_a _).
+      intros a.
+      pose (proof_of_False := not_a a).
+      case proof_of_False.
+Qed.
