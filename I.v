@@ -91,6 +91,12 @@ Proof.
   case proof_of_False.
 Qed.
 
+Definition EM (A : Prop) : Prop := A \/ ~ A.
+
+Definition DN (A : Prop) : Prop := ~ ~ A -> A.
+
+Definition CC (A B : Prop) : Prop := (~ A -> B) -> (~ A -> ~ B) -> A.
+
 Theorem I7a : forall A : Prop,
     (A \/ ~ A) -> (~ ~ A -> A).
 Proof.
@@ -106,7 +112,7 @@ Proof.
 Qed.
 
 Theorem I7b : forall A B : Prop,
-    (not (not A) -> A) -> ((~ A -> B) /\ (~ A -> ~ B) -> A).
+    (~ ~ A -> A) -> ((~ A -> B) /\ (~ A -> ~ B) -> A).
 Proof.
   intros A B.
   intros not_not_a_imp_a.
@@ -120,18 +126,17 @@ Proof.
     case proof_of_False.
 Qed.
 
-Theorem I7c : forall A B : Prop,
-    ((~ A -> B) /\ (~ A -> ~ B) -> A) -> (A \/ not A).
+Theorem I7c : forall (A : Prop),
+    (forall (P Q : Prop), (~ P -> Q) /\ (~ P -> ~ Q) -> P) -> (A \/ ~ A).
 Proof.
-  intros A B.
-  intros cc.
-  refine (or_intror _).
-    intros a.
-    assert (not_a_imp_b : ~ A -> B).
-      intros not_a.
-      pose (proof_of_False := not_a a).
-      case proof_of_False.
-    assert (not_a_imp_not_b : ~ A -> ~ B).
-      intros not_a.
-      pose (proof_of_False := not_a a).
-      case proof_of_False.
+  intros A.
+  intros CC.
+  pose (H := CC (A \/ ~ A) (~ A)).
+  refine (H _).
+    refine (conj _ _).
+      refine (I4a A (A \/ ~ A) _).
+        intros a. exact (or_introl a).
+
+      refine (I4a (~ A) (A \/ ~ A) _).
+        intros not_a. exact (or_intror not_a).
+Qed.
