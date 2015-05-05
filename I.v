@@ -36,3 +36,23 @@ Proof.
 
     exact b.
 Qed.
+
+Theorem I4a : forall A B : Prop,
+    (A -> B) -> (~ B -> ~ A).
+Proof.
+  intros A B.
+  intros a_imp_b not_b.
+  intros a.
+  refine (not_b _).
+    refine (a_imp_b _).
+      exact a.
+Qed.
+
+Theorem I4b : forall A : Prop,
+    A -> ~ ~ A.
+Proof.
+  intros A.
+  intros a.
+  intros not_a.
+  exact (not_a a).
+Qed.
