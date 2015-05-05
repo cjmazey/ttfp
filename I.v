@@ -168,3 +168,9 @@ Definition I10b (f : nat -> nat) : Prop :=
 
 Definition I10c (f : nat -> nat) : Prop :=
   forall (x y : nat), x < y -> f x < f y.
+
+Definition I11 (y : nat) : Prop :=
+  forall (x : nat), x < y /\ forall (z : nat), y > z -> exists (x : nat), x > z.
+
+(* y is free.  the first x is bound by forall x.  the second x is
+bound by forall z. both zs are bound by forall z. *)
