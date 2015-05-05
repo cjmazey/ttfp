@@ -69,3 +69,24 @@ Proof.
 
     exact (not_b b).
 Qed.
+
+Theorem I6a : forall A B : Prop,
+    (A -> B) /\ (A -> ~ B) -> ~ A.
+Proof.
+  intros A B.
+  intros a_imp_b_and_a_imp_not_b.
+  destruct a_imp_b_and_a_imp_not_b as [a_imp_b a_imp_not_b].
+  intros a.
+  refine (a_imp_not_b a _).
+    exact (a_imp_b a).
+Qed.
+
+Theorem I6b : forall A B : Prop,
+    A /\ ~ A -> B.
+Proof.
+  intros A B.
+  intros a_and_not_a.
+  destruct a_and_not_a as [a not_a].
+  pose (proof_of_False := not_a a).
+  case proof_of_False.
+Qed.
