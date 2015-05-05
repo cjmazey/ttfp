@@ -172,16 +172,16 @@ Definition I10c (f : nat -> nat) : Prop :=
 Definition I11 (y : nat) : Prop :=
   forall (x : nat), x < y /\ forall (z : nat), y > z -> exists (x : nat), x > z.
 
-(* y is free.  the first x is bound by forall x.  the second x is
-bound by forall z. both zs are bound by forall z. *)
+(** [y] is free.  the first [x] is bound by [forall x].  the second
+[x] is bound by [forall z]. both [z]s are bound by [forall z]. *)
 
 Definition I12 : Prop :=
   forall (z : nat), exists (y : nat), z < y /\ y < z.
 
-(* suppose s = y + 1.  then if i12 : I12, i12 s would result in the
-capture of the y in s by exists y.  we therefore replace y with w in
-exists y so that if i12 : I12, then i12 s is exists w, y + 1 < w /\ w
-< y + 1. *)
+(** Suppose [s = y + 1].  Then if [i12 : I12], [i12 s] would result in
+the capture of the [y] in [s] by [exists y].  We therefore replace [y]
+with [w] in [exists y] so that if [i12 : I12], then [i12 s] is [exists
+w, y + 1 < w /\ w < y + 1]. *)
 
 Section I12_section.
   Hypothesis i12 : I12.
