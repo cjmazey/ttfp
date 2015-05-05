@@ -23,3 +23,16 @@ Proof.
     refine (a_or_b_imp_c _).
       exact (or_intror b).
 Qed.
+
+Theorem I3 : forall A B C : Prop,
+    (A -> (B -> C)) -> ((A /\ B) -> C).
+Proof.
+  intros A B C.
+  intros a_imp_b_imp_c.
+  intros a_and_b.
+  destruct a_and_b as [a b].
+  refine (a_imp_b_imp_c _ _).
+    exact a.
+
+    exact b.
+Qed.
