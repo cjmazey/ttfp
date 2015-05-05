@@ -157,18 +157,14 @@ Proof.
       case proof_of_False.
 Qed.
 
-Definition I9 : forall (x y : nat), exists (z : nat),
-      x <> y -> x < z /\ z < y.
-Abort.
+Definition I9 : Prop :=
+  forall (x y : nat), exists (z : nat), x <> y -> x < z /\ z < y.
 
-Definition I10a (f : nat -> nat) : forall (x y : nat),
-    f x = f y -> x = y.
-Abort.
+Definition I10a (f : nat -> nat) : Prop :=
+  forall (x y : nat), f x = f y -> x = y.
 
-Definition I10b (f : nat -> nat) : forall (y : nat), exists (x : nat),
-      f x = y.
-Abort.
+Definition I10b (f : nat -> nat) : Prop :=
+  forall (y : nat), exists (x : nat), f x = y.
 
-Definition I10c (f : nat -> nat) : forall (x y : nat),
-    x < y -> f x < f y.
-Abort.
+Definition I10c (f : nat -> nat) : Prop :=
+  forall (x y : nat), x < y -> f x < f y.
