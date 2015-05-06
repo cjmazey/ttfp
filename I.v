@@ -160,13 +160,13 @@ Module I7.
       refine (I4.I4a (~ A) (A \/ ~ A) _).
         intros not_a. exact (or_intror not_a).
   Qed.
-
-  Definition Pierce (A B : Prop) : Prop := ((A -> B) -> A) -> A.
 End I7.
 
 
 Module I8.
   Export I7.
+
+  Definition Pierce (A B : Prop) : Prop := ((A -> B) -> A) -> A.
 
   Theorem I8 : forall (A B : Prop),
       EM A -> Pierce A B.
@@ -306,3 +306,48 @@ Module I14.
       exact (ex_intro _ x Ax).
   Qed.
 End I14.
+
+
+Module I15.
+  Hypothesis A : nat -> Prop.
+
+  Definition P : Prop :=
+    ~ (exists x, A x).
+
+  Definition Q : Prop :=
+    forall x, ~ A x.
+
+  Theorem I15a : P -> Q.
+  Proof.
+    unfold P, Q.
+    intros p x Ax.
+    refine (p _).
+      exact (ex_intro _ x Ax).
+  Qed.
+
+  Theorem I15b : Q -> P.
+  Proof.
+    unfold P, Q.
+    intros q e.
+    exact (ex_ind q e).
+  Qed.
+
+  Theorem I15c : (exists (x : nat), ~ A x) -> ~ (forall (x : nat), A x).
+  Proof.
+    intros e f.
+    assert (g : forall x : nat, (A x -> False) -> False).
+      intros x not_Ax.
+      exact (not_Ax (f x)).
+      exact (ex_ind g e).
+  Qed.
+
+  (** I15
+    I would not expect it. . .if we have a proof that [A x] does not hold for all [x],
+    it does not mean we have a proof that [A x] does not hold for some particular [x].
+   *)
+
+  Theorem I15d : (~ forall x : nat, A x) -> (exists x : nat, ~ A x).
+  Proof.
+    intros f.
+  Abort.
+End I15.
