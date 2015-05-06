@@ -1,3 +1,5 @@
+(** * Chapter I *)
+
 Theorem I1 : forall A B C : Prop,
     (A -> B) -> (B -> C) -> (A -> C).
 Proof.
@@ -188,5 +190,48 @@ Section I12_section.
 
   Variable y : nat.
 
-  Check i12 (y + 1).  (* note how y is renamed to y0 *)
+  Check i12 (y + 1).  (* note how [y] is renamed to [y0] *)
 End I12_section.
+
+Definition I13 (A : nat -> nat -> Prop) : Prop :=
+  (forall (x : nat), exists (y : nat), A x y) -> (exists (y : nat), forall (x : nat), A x y).
+
+(** We must show
+
+(1)  [exists y, forall x, A x y]
+
+on the assumption that
+
+(2)  [forall x, exists y, A x y].
+
+What can we do with (2)?  First, we can see that
+
+(3)  [exists y, A u y]
+
+where [u] is free.  Then, if we can derive some [P] from the _assumption_
+[A u y], where [y] does not occur free anywhere but [A u y], we can conclude [P]
+from (3) and dismiss the assumption [A u y].
+
+But now we are stuck--to show (1), we need first to show [forall u, A u y].  But
+we can not do this from the _assumption_ [A u y], since [u] must be arbitrary, i.e.,
+it must not appear in any assumptions from which we conclude [A u y] (which is itself
+the assumption in this case.)
+
+*)
+
+Section I13_section.
+  Hypothesis A : nat -> nat -> Prop.
+
+  Theorem i13 : I13 A.
+  Proof.
+    unfold I13.
+    intros H.
+    refine (ex_intro (fun y => forall (x : nat), A x y) _ _).
+    intros x.
+    pose (H' := H x).
+    refine (ex_ind _ H').
+    intros x0.
+    intros H''.
+  Abort.
+
+End I13_section.
