@@ -235,3 +235,30 @@ Section I13_section.
   Abort.
 
 End I13_section.
+
+Section I14_section.
+  Hypothesis A : nat -> Prop.
+  Hypothesis B : Prop.
+
+  Definition P : Prop :=
+    forall (x : nat), A x -> B.
+
+  Definition Q : Prop :=
+    (exists (x : nat), A x) -> B.
+
+  Theorem I14a : P -> Q.
+  Proof.
+    unfold P, Q.
+    intros f.
+    intros e.
+    exact (ex_ind f e).
+  Qed.
+
+  Theorem I14b : Q -> P.
+  Proof.
+    unfold P, Q.
+    intros p x Ax.
+    refine (p _).
+      exact (ex_intro _ x Ax).
+  Qed.
+End I14_section.
