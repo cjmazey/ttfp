@@ -162,64 +162,78 @@ Qed.
 Definition I9 : Prop :=
   forall (x y : nat), exists (z : nat), x <> y -> x < z /\ z < y.
 
-Definition I10a (f : nat -> nat) : Prop :=
-  forall (x y : nat), f x = f y -> x = y.
+Module I10.
+  Definition I10a (f : nat -> nat) : Prop :=
+    forall (x y : nat), f x = f y -> x = y.
 
-Definition I10b (f : nat -> nat) : Prop :=
-  forall (y : nat), exists (x : nat), f x = y.
+  Definition I10b (f : nat -> nat) : Prop :=
+    forall (y : nat), exists (x : nat), f x = y.
 
-Definition I10c (f : nat -> nat) : Prop :=
-  forall (x y : nat), x < y -> f x < f y.
+  Definition I10c (f : nat -> nat) : Prop :=
+    forall (x y : nat), x < y -> f x < f y.
+End I10.
 
-Definition I11 (y : nat) : Prop :=
-  forall (x : nat), x < y /\ forall (z : nat), y > z -> exists (x : nat), x > z.
 
-(** [y] is free.  the first [x] is bound by [forall x].  the second
-[x] is bound by [forall z]. both [z]s are bound by [forall z]. *)
+Module I11.
+  Definition I11 (y : nat) : Prop :=
+    forall (x : nat), x < y /\ forall (z : nat), y > z -> exists (x : nat), x > z.
 
-Definition I12 : Prop :=
-  forall (z : nat), exists (y : nat), z < y /\ y < z.
+  (** I11
 
-(** Suppose [s = y + 1].  Then if [i12 : I12], [i12 s] would result in
-the capture of the [y] in [s] by [exists y].  We therefore replace [y]
-with [w] in [exists y] so that if [i12 : I12], then [i12 s] is [exists
-w, y + 1 < w /\ w < y + 1]. *)
+    [y] is free.  the first [x] is bound by [forall x].  the second
+    [x] is bound by [forall z]. both [z]s are bound by [forall z].j
+   *)
+End I11.
 
-Section I12_section.
+
+Module I12.
+  Definition I12 : Prop :=
+    forall (z : nat), exists (y : nat), z < y /\ y < z.
+
+  (** I12
+
+    Suppose [s = y + 1].  Then if [i12 : I12], [i12 s] would result in
+    the capture of the [y] in [s] by [exists y].  We therefore replace [y]
+    with [w] in [exists y] so that if [i12 : I12], then [i12 s] is [exists
+    w, y + 1 < w /\ w < y + 1].
+   *)
+
   Hypothesis i12 : I12.
 
   Variable y : nat.
 
   Check i12 (y + 1).  (* note how [y] is renamed to [y0] *)
-End I12_section.
+End I12.
 
-Definition I13 (A : nat -> nat -> Prop) : Prop :=
-  (forall (x : nat), exists (y : nat), A x y) -> (exists (y : nat), forall (x : nat), A x y).
 
-(** We must show
+Module I13.
+  Definition I13 (A : nat -> nat -> Prop) : Prop :=
+    (forall (x : nat), exists (y : nat), A x y) -> (exists (y : nat), forall (x : nat), A x y).
 
-(1)  [exists y, forall x, A x y]
+  (** I13
 
-on the assumption that
+    We must show
 
-(2)  [forall x, exists y, A x y].
+    (1) [exists y, forall x, A x y]
 
-What can we do with (2)?  First, we can see that
+    on the assumption that
 
-(3)  [exists y, A u y]
+    (2)  [forall x, exists y, A x y].
 
-where [u] is free.  Then, if we can derive some [P] from the _assumption_
-[A u y], where [y] does not occur free anywhere but [A u y], we can conclude [P]
-from (3) and dismiss the assumption [A u y].
+    What can we do with (2)?  First, we can see that
 
-But now we are stuck--to show (1), we need first to show [forall u, A u y].  But
-we can not do this from the _assumption_ [A u y], since [u] must be arbitrary, i.e.,
-it must not appear in any assumptions from which we conclude [A u y] (which is itself
-the assumption in this case.)
+    (3)  [exists y, A u y]
 
-*)
+    where [u] is free.  Then, if we can derive some [P] from the _assumption_
+    [A u y], where [y] does not occur free anywhere but [A u y], we can conclude [P]
+    from (3) and dismiss the assumption [A u y].
 
-Section I13_section.
+    But now we are stuck--to show (1), we need first to show [forall u, A u y].  But
+    we can not do this from the _assumption_ [A u y], since [u] must be arbitrary, i.e.,
+    it must not appear in any assumptions from which we conclude [A u y] (which is itself
+    the assumption in this case.)
+   *)
+
   Hypothesis A : nat -> nat -> Prop.
 
   Theorem i13 : I13 A.
@@ -227,16 +241,16 @@ Section I13_section.
     unfold I13.
     intros H.
     refine (ex_intro (fun y => forall (x : nat), A x y) _ _).
-    intros x.
-    pose (H' := H x).
-    refine (ex_ind _ H').
-    intros x0.
-    intros H''.
+      intros x.
+      pose (H' := H x).
+      refine (ex_ind _ H').
+        intros x0.
+        intros H''.
   Abort.
+End I13.
 
-End I13_section.
 
-Section I14_section.
+Module I14.
   Hypothesis A : nat -> Prop.
   Hypothesis B : Prop.
 
@@ -249,16 +263,16 @@ Section I14_section.
   Theorem I14a : P -> Q.
   Proof.
     unfold P, Q.
-    intros f.
-    intros e.
+    intros f e.
     exact (ex_ind f e).
   Qed.
 
   Theorem I14b : Q -> P.
+
   Proof.
     unfold P, Q.
     intros p x Ax.
     refine (p _).
       exact (ex_intro _ x Ax).
   Qed.
-End I14_section.
+End I14.
